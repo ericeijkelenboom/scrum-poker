@@ -1,0 +1,49 @@
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs
+  ================================================== -->
+  <meta charset="utf-8">
+  <title>Distributed planning poker</title>
+  <meta name="description" content="Distributed planning poker">
+  <meta name="author" content="Eric Eijkelenboom" >
+
+  <!-- Mobile Specific Metas
+  ================================================== -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- CSS
+  ================================================== -->
+	
+
+  <!-- Favicons
+  ================================================== -->
+  <link rel="shortcut icon" href="public/images/favicon.ico">
+  <link rel="apple-touch-icon" href="public/images/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="public/images/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="public/images/apple-touch-icon-114x114.png">
+</head>
+
+<body>
+  {{renderPage}}
+</body>
+
+<template name="home">
+  <h1>Welcome to planning poker</h1>
+  
+  <div class="row">	
+    <div class="span6">New session <button class="btn btn-default" id="create">Create</button> </div>
+    <div class="span6">Join session <input id="storyid" type="text" placeholder="Story ID" /> <button class="btn btn-default" id="join" >Join</button></div>
+  </div>
+	
+</template>
+
+
+<template name="story">
+  {{#with story}}
+	New planning session created! Unique id: {{displayId}}. Share ID or URL to invite other players.
+  {{/with}}
+</template>
