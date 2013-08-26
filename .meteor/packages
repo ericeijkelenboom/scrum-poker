@@ -6,3 +6,15 @@
 autopublish
 insecure
 preserve-inputs
+bootstrap
+jquery
+standard-app-packages
+iron-router
+HTML5-History-API
+page-js-ie-support
+font-awesome
+mongo-counter
+accounts-facebook
+accounts-ui
+random
+amplify

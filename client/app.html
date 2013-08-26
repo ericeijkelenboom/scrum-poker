@@ -27,23 +27,28 @@
   <link rel="apple-touch-icon" sizes="114x114" href="public/images/apple-touch-icon-114x114.png">
 </head>
 
-<body>
-  {{renderPage}}
+<body>	
+  	{{renderPage}}
 </body>
 
 <template name="home">
-  <h1>Welcome to planning poker</h1>
+  <h1>Online, distributed planning poker</h1>
   
-  <div class="row">	
+  <div class="row">
+	<div id="error" class="span12"></div>
     <div class="span6">New session <button class="btn btn-default" id="create">Create</button> </div>
-    <div class="span6">Join session <input id="storyid" type="text" placeholder="Story ID" /> <button class="btn btn-default" id="join" >Join</button></div>
+    <div class="span6">Join session
+	  <input id="storyid" type="text" step="1" oninvalid="setCustomValidity('A story number consists of digits only')" placeholder="Story ID" />
+	  <button class="btn btn-default" id="join" >Join</button>
+	</div>
   </div>
 	
 </template>
 
-
 <template name="story">
-  {{#with story}}
-	New planning session created! Unique id: {{displayId}}. Share ID or URL to invite other players.
-  {{/with}}
+    Welcome to planning session {{displayId}}. {{connectedUsersCount}} connected users.
+</template>
+
+<template name="storyNotFound">
+	Story not found
 </template>
