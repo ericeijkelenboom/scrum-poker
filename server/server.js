@@ -2,11 +2,13 @@ Meteor.methods({
     createStory: function(userId){
         var displayId = incrementCounter('storyDisplayId');
         
+        var moderator = {userId: userId};
+        
         return Stories.insert({
             displayId: displayId,
             name: '',
-            users: [userId],
-            moderator: userId,
+            users: [moderator],
+            moderator: moderator,
             });
     }
 });

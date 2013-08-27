@@ -17,7 +17,7 @@ Template.story.created = function(){
 	var story = this.data;
 	SessionAmplify.set('currentStoryId', story._id);
 	
-	Stories.update({_id: story._id}, {$addToSet: {users: SessionAmplify.get('userId')}});
+	Stories.update({_id: story._id}, {$addToSet: {users: {userId: SessionAmplify.get('userId')}}});
 };
 
 Template.story.connectedUsersCount = function(){
