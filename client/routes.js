@@ -14,14 +14,14 @@ StoryController = RouteController.extend({
   	notFoundTemplate: 'storyNotFound',
 
   	waitOn: function () {
-		return Meteor.subscribe('stories', SessionAmplify.get('userId'));
+		return stories_sub;
   	},
 
   	data: function () {
     	var story; 
     	
     	if(isNumber(this.params._id)) 
-			story = Stories.findOne({displayId: +this.params._id});
+			story = Stories.findOne({display_id: +this.params._id});
 		else 
 			story = Stories.findOne(this.params._id);
 						

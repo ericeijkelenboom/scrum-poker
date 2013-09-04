@@ -46,7 +46,13 @@
 </template>
 
 <template name="story">
-    Welcome to planning session {{displayId}}. {{connectedUsersCount}} connected users.
+    Welcome to planning session {{display_id}}.
+    
+    {{#each players}}
+    	{{#if active}}
+    		<div>(<span id="cardvalue">{{_id}}</span>)</div>
+		{{/if}}
+    {{/each}}
 </template>
 
 <template name="storyNotFound">
