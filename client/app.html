@@ -46,13 +46,23 @@
 </template>
 
 <template name="story">
-    Welcome to planning session {{display_id}}.
+    <div>Planning session {{display_id}}.</div>
+	<div>
+		Cards: <br/>
+		{{#each cards}}
+			<div class="available-card"><a href='#'>{{this}}</a></div>
+		{{/each}}
+	</div>
+	
+	{{#if complete}}
+	<div id="players-container">
+		Players:<br/>     	
     
-    {{#each players}}
-    	{{#if active}}
-    		<div>(<span id="cardvalue">{{_id}}</span>)</div>
-		{{/if}}
-    {{/each}}
+    	{{#each active_players}}
+			<div>{{_id}}: {{estimate}}</div>
+	    {{/each}}
+    </div>
+    {{/if}}
 </template>
 
 <template name="storyNotFound">
