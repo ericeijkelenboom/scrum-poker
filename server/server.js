@@ -4,7 +4,7 @@ Meteor.publish('stories', function(player_id) {
 });
 
 Meteor.publish('players', function() {
-	return Players.find({});
+	return Players.find({active: true});
 });
 
 Meteor.methods({
@@ -12,15 +12,35 @@ Meteor.methods({
         var display_id = incrementCounter('story_display_id');
         return Stories.insert({
             display_id: display_id,
-            players: [player_id]
+            players: [player_id], 
+            moderator: player_id,
+            estimates: []
             });
     }, 
     
     keepalive: function (player_id) {
     	check(player_id, String);
     	Players.update({_id: player_id}, {$set: {last_keepalive: (new Date()).getTime(), active: true}});
-  }
+  	},
+  	
+  	initialize_player: function(player_id) {
+  		if(!player_id) { 
+  			return create_new_player();
+  		}
+  		else {
+  			var player = Players.findOne(player_id);
+  			if(!player)
+  				return create_new_player();
+  				
+  			Players.update(player_id, {$set: {active: true}});
+  			return player_id;
+  		}
+  	}
 });
+
+var create_new_player = function() {
+	return Players.insert({last_keepalive: (new Date()).getTime(), active: true});
+}
 
 // Set those players that have not come in to idle  
 Meteor.setInterval(function () {

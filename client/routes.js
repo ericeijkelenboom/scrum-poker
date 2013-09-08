@@ -24,7 +24,10 @@ StoryController = RouteController.extend({
 			story = Stories.findOne({display_id: +this.params._id});
 		else 
 			story = Stories.findOne(this.params._id);
-						
+
+		if(story)
+			init_story(story);
+									
 		return story;
   	},
 

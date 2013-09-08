@@ -45,8 +45,13 @@
 	
 </template>
 
-<template name="story">
-    <div>Planning session {{display_id}}.</div>
+<template name="story">	
+    <div>
+    	Story {{display_id}}. 
+    	{{#if completed}}
+    		Done.
+		{{/if}}
+	</div>
 	<div>
 		Cards: <br/>
 		{{#each cards}}
@@ -54,13 +59,21 @@
 		{{/each}}
 	</div>
 	
-	{{#if complete}}
-	<div id="players-container">
-		Players:<br/>     	
+	{{#if i_am_moderator}}
+		<button class="btn btn-default" id="force_show" >Force show</button> 
+	{{/if}}
+	
+	{{#if completed}}
+	<div id="estimates-container">
+		Estimates:<br/>     	
     
-    	{{#each active_players}}
-			<div>{{_id}}: {{estimate}}</div>
+    	{{#each estimates}}
+			<div>({{estimate}})</div>
 	    {{/each}}
+	    
+	    {{#if i_am_moderator}}
+	    	<button class="btn btn-default" id="create_new">Create new story</button>
+	    {{/if}}
     </div>
     {{/if}}
 </template>
