@@ -34,7 +34,6 @@ Template.home.rendered = function() {
 	Session.set('story_id', undefined);
 }
 
-
 /// Story template functions
 Template.story.active_players = function() {
 	return active_players();
@@ -101,7 +100,7 @@ var open_story = function(storyId) {
 var mark_story_complete = function(force) {
 	var story = current_story();
 	
-	if((story.estimates && story.players.length === story.estimates.length) || force)
+	if((story.estimates && story.players.length <= story.estimates.length) || force)
 		Stories.update({_id: Session.get('story_id')}, {$set: {completed: true}});
 }
 
@@ -121,16 +120,6 @@ var active_players = function() {
 	return Players.find({$and: [{_id: {$in: player_ids}}, {active: true}]}).fetch();
 }
 
-// Send keepalives so the server can tell when a player leaves.
-//
-// TODO this is not a great idiom. meteor server does not yet have a
-// way to expose connection status to user code. Once it does, this
-// code can go away.
-Meteor.setInterval(function() {
-	if (Meteor.status().connected && Session.get('story_id'))
-    	Meteor.call('keepalive', SessionAmplify.get('player_id'), Session.get('story_id'));
-	}, 10*1000);
-	
 // Amplify session
 SessionAmplify = _.extend({}, Session, {
   keys: _.object(_.map(amplify.store(), function(value, key) {
@@ -141,12 +130,6 @@ SessionAmplify = _.extend({}, Session, {
     amplify.store(key, value);
   },
 });
-
-// Utility functions
-log = function(message) {
-  if (typeof console !== 'undefined')
-      console.log(message);
-}
 
 isNumber = function(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
