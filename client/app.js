@@ -1,122 +1,127 @@
 Meteor.startup(function () {
-	// Create new player or activate existing player
- 	Meteor.call('initialize_player', PersistentSession.get('player_id'), function(error, player_id) {
- 		PersistentSession.set('player_id', player_id);
- 	});
- 	
- 	Deps.autorun(function () {
-		// Subscribe to all players and the stories this player is in
-		stories_sub = Meteor.subscribe('stories', PersistentSession.get('player_id'));
-		players_sub = Meteor.subscribe('players');
-		
-		var player_ids = [];
+
+  	Deps.autorun(function () {
+		story = Meteor.subscribe('story', Session.get('story_id'), function() {
+			log('Subscribed to story');
+		}); 
+		players = Meteor.subscribe('players_in_story', Session.get('story_id'), function() {
+			log('Subscribed to players');
+		});
+		me = Meteor.subscribe('player', PersistentSession.get('player_id'), function() {
+			log('Subscribed to me');
+			obtain_player_id();
+		});
 		
 		// Listen for a new story, started by the moderator
 		Stories.find({_id: Session.get('story_id')}).observeChanges({
 			changed: function(id, fields) {
-				if(fields.next_story) {
+				if(fields.next_story) 
 					open_story(fields.next_story);
-				} else if(fields.players) {
-					players_ids = fields.players;			
-				}
 			}
 		});
-		
-		current_story = Stories.findOne({_id: Session.get('story_id')});
-		if(current_story) {
-			active_players = Players.find({$and: [{_id: {$in: current_story.players}}, {active: true}]}).fetch();
-			
-			// If a player leaves, try to complete the story, so other players don't have to wait
-			mark_story_complete(current_story);
-		}
 	});
 });
 
 /// Home template functions
 Template.home.events({
     'click #create' : function(event) {
-		create_new_story(false);
+		create_story(false);
     },
     'click #join':  function(event) {
         Router.go('story', {_id: +$('#storyid').val()});
 	}
 });
 
-Template.home.rendered = function() {
-	Session.set('story_id', undefined);
-}
+Template.story.events({
+	'click .available-card a': function(event, template) {
+		perform_estimate(event.target.text);
+		return false; 
+	}, 
+	'click #force_show': function(event, template){
+		mark_story_done();
+		return false;
+	},
+	'click #create_new': function(event, template) {
+		create_story(true);
+		return false; 
+	}
+});
 
-/// Story template functions
 Template.story.active_players = function() {
-	return active_players;
-};
+	return Players.find({$and: [{story_id: Session.get('story_id')}, {active: true}]}).fetch();
+}
 
 Template.story.cards = function(){
 	return Decks.fibonacci;	
 }
 
 Template.story.i_am_moderator = function() {
-	return current_story.moderator === PersistentSession.get('player_id'); 
+	return Stories.findOne(Session.get('story_id')).moderator === PersistentSession.get('player_id'); 
 }
 
-Template.story.events({
-	'tap, click .available-card a': function(event, template) {
-		perform_estimate(event.target.text);
-	}, 
-	'tap, click #force_show': function(event, template){
-		mark_story_complete(template.data, true);
-	},
-	'tap, click #create_new': function(event, template) {
-		create_new_story(true);
+Template.story.is_valid_estimate = function(estimate) {
+	return estimate != -1;
+}
+
+create_story = function(include_other_players) {
+	var player_id = PersistentSession.get('player_id');
+	var story_id = Stories.insert({moderator: player_id, players: [player_id], done: false});
+	log('Created new story with id: ' + story_id);
+
+	if(include_other_players)
+		Stories.update(Session.get('story_id'), {$set: {next_story: story_id}});
+
+	Router.go('story', {_id: story_id});
+}
+
+open_story = function(story_id) {
+	Router.go('story', {_id: story_id});
+}
+
+obtain_player_id = function() {
+	// Create new player id if none exists
+	if(!PersistentSession.get('player_id')) {
+		var player_id = Players.insert({active: true});
+		PersistentSession.set('player_id', player_id);
+		log('Created new player with id ' + PersistentSession.get('player_id'));
+	} else {
+		var me = Players.findOne(PersistentSession.get('player_id'));
+		if(!me) {
+			// Should only happen in case of DB reset
+			var player_id = Players.insert({active: true});
+			PersistentSession.set('player_id', player_id);
+			log('Created new player with id ' + PersistentSession.get('player_id') + ' (after DB reset)');
+		} else {
+			Players.update(me._id, {$set: {active: true}});
+			log('Activated existing player with id ' + me._id);
+		}
 	}
-});
 
-init_story = function(story) {
-	// Save story in session
-	Session.set('story_id', story._id);
-
-	// Add current player to the story
-	Stories.update(story._id, {$addToSet: {players: PersistentSession.get('player_id')}});
+	return PersistentSession.get('player_id');
 }
 
-var create_new_story = function(from_existing_story) {
-	// Create story on the server
-    Meteor.call('create_story', PersistentSession.get('player_id'), function(error, storyId){
-    	
-    	if(from_existing_story) {
-	    	// Notify other players of the new story 
-    		Stories.update(Session.get('story_id'), {$set: {next_story: storyId}});	
-    	}	
-       
-        open_story(storyId);
-    });
+perform_estimate = function(estimate) {
+	// Can't change estimates when we're done
+	if(Stories.findOne(Session.get('story_id')).done)
+		return;
+
+	Players.update(PersistentSession.get('player_id'), {$set: {estimate: estimate}});
+
+	try_mark_story_done();
 }
 
-var open_story = function(storyId) {
-	Router.go('story', {_id: storyId});
+try_mark_story_done = function() {
+	var missing_estimate_count = Players.find({$and: [{story_id: Session.get('story_id')}, 
+		{active: true}, {estimate: -1}]}).count();
+
+	if(missing_estimate_count == 0)
+		mark_story_done();
 }
 
-var mark_story_complete = function(story, force) {	
-	if(force || (story.estimates && active_players.length <= story.estimates.length))
-		Stories.update({_id: Session.get('story_id')}, {$set: {completed: true}});
+mark_story_done = function() {
+	Stories.update(Session.get('story_id'), {$set: {done: true}});
 }
 
-var perform_estimate = function(estimate) {
-	if(current_story.completed)
-		return; // No more estimates allowed
-	
-	// Add existing estimate and add a new one 
-	Stories.update({_id: Session.get('story_id')}, {$pull: {estimates: {player_id: me()._id}}});
-	Stories.update(Session.get('story_id'), {$addToSet: {estimates: {player_id: me(), estimate: estimate}}});
-	
-	mark_story_complete(current_story);
-}
-
-var me = function() {
-	return Players.findOne(PersistentSession.get('player_id'));
-}
-
-// Peristent session
 PersistentSession = _.extend({}, Session, {
   keys: _.object(_.map(amplify.store(), function(value, key) {
     return [key, JSON.stringify(value)]
@@ -127,6 +132,3 @@ PersistentSession = _.extend({}, Session, {
   },
 });
 
-isNumber = function(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
