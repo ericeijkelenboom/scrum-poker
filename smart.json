@@ -2,6 +2,7 @@
   "packages": {
     "font-awesome": {},
     "mongo-counter": {},
-    "iron-router": {}
+    "iron-router": {},
+    "bootstrap-3": {}
   }
 }

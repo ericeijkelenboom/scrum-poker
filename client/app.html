@@ -1,77 +1,95 @@
 <head>
-  <meta charset="utf-8">
-  <title>Distributed planning poker</title>
-  <meta name="description" content="Distributed planning poker">
-  <meta name="author" content="Eric Eijkelenboom">
+	<meta charset="utf-8">
+	<title>Distributed planning poker</title>
+	<meta name="description" content="Distributed planning poker">
+	<meta name="author" content="Eric Eijkelenboom">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="shortcut icon" href="/images/favicon.png">
-  <link rel="apple-touch-icon" sizes="57x57" href="/images/apple-touch-icon.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="/images/apple-touch-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="/images/apple-touch-icon-114x114.png">
+	<link rel="shortcut icon" href="/images/favicon.png">
+	<link rel="apple-touch-icon" sizes="57x57" href="/images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="/images/apple-touch-icon-114x114.png">
 
-  <link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="style.css">
   <!--[if lt IE 9]>
     <script src="js/shiv.js"></script>
-  <![endif]-->
+    <![endif]-->
 </head>
-
 <body>	
-  	{{renderPage}}
+	{{renderPage}}
 </body>
 
 <template name="home">
-  <h1>Online, distributed planning poker</h1>
-  
-  <div class="row">
-	<div id="error" class="span12"></div>
-    <div class="span6">New session <button class="btn btn-default" id="create">Create</button> </div>
-    <div class="span6">Join session
-	  <input id="storyid" type="text" step="1" oninvalid="setCustomValidity('A story number consists of digits only')" placeholder="Story ID" />
-	  <button class="btn btn-default" id="join" >Join</button>
+
+	<div id="wrap">
+		<div class="container">
+			<div class="page-header">
+				<h1>Planning poker <small>for distributed teams</small></h1>
+			</div>
+
+			<p class="lead">
+				Sprint planning without being in the same location? Get started here!
+			</p>
+
+			<p>
+				<button type="button" id="create" class="btn btn-primary btn-lg btn-block">Start estimating</button>
+			</p>
+
+		</div>
 	</div>
-  </div>
-	
+
+	<div id="footer">
+		<div class="container">
+			<p class="text-muted credit">Created by <a target="_blank" href="https://twitter.com/ericmarius">@ericmarius</a>. Powered by <a target="_blank" href="http://meteor.com">Meteor</a>.</p>
+		</div>
+	</div>
+
 </template>
 
+
 <template name="story">	
-    <div>
-    	Story {{_id}}. 
-    	{{#if completed}}
-    		Done.
-		{{else}}
+	<div class="container">
+		<div>
+			Story {{_id}}. 
+			{{#if completed}}
+			Done.
+			{{else}}
 			{{active_players.length}} active players
-		{{/if}}
-	</div>
-	<div>
-		Cards: <br/>
-		{{#each cards}}
-			<div class="available-card"><a href='#'>{{this}}</a></div>
-		{{/each}}
-	</div>
-	
-	{{#if i_am_moderator}}
+			{{/if}}
+		</div>
+		<div>
+			<div class="playingCards simpleCards" id="cards">
+				{{#each cards}}
+				<div class="card rank-7">
+					<span class="rank">{{this}}</span>
+				</div>
+				{{/each}}
+			</div>
+		</div>
+		
+		{{#if i_am_moderator}}
 		<button class="btn btn-default" id="force_show" >Force show</button> 
-	{{/if}}
-	
-	{{#if done}}
+		{{/if}}
+		
+		{{#if done}}
 		<div id="estimates-container">
 			Estimates:<br/>     	
-	    
-	    	{{#each active_players}}
-				{{#if is_valid_estimate estimate}}
-					<div>{{estimate}}</div>
-				{{else}}
-					<div>No estimate given</div>
-				{{/if}}
-		    {{/each}}
-		    
-		    {{#if i_am_moderator}}
-		    	<button class="btn btn-default" id="create_new">Create new story</button>
-		    {{/if}}
-	    </div>
-    {{/if}}
+
+			{{#each active_players}}
+			{{#if is_valid_estimate estimate}}
+			<div>{{estimate}}</div>
+			{{else}}
+			<div>No estimate given</div>
+			{{/if}}
+			{{/each}}
+
+			{{#if i_am_moderator}}
+			<button class="btn btn-default" id="create_new">Create new story</button>
+			{{/if}}
+		</div>
+		{{/if}}
+	</div>
 </template>
 
 <template name="storyNotFound">
