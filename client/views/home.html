@@ -1,0 +1,39 @@
+<template name="home">
+    <div id="wrap">
+        <div class="container">
+            <div class="page-header">
+                <h1>Planning Poker
+                    <small>for distributed teams</small>
+                </h1>
+            </div>
+
+            <div class="lead">
+                Sprint planning without being in the same location? Get started here!
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <button id="create" class="btn btn-default btn-primary btn-lg btn-block" type="button">Create new story</button>
+                </div>
+                <div class="col-lg-6">
+                    <button id="join" class="btn btn-default btn-default btn-lg btn-block" type="button">Join existing story</button>
+
+                    <div id="storyIdInputGroup" class="input-group" style="display: none">
+                        <input id="storyId" type="tel" class="form-control" placeholder="Story id">
+                        <span class="input-group-btn">
+                            <button id="joinGo" class="btn btn-default" type="button">Go!</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <div class="container">
+            <p class="text-muted credit">Created by <a target="_blank" href="https://twitter.com/ericmarius">@ericmarius</a>. Powered by <a target="_blank" href="http://meteor.com">Meteor</a>.</p>
+        </div>
+    </div>
+
+    <!-- Fork me on github -->
+    <a href="https://github.com/you" class="hidden-xs hidden-sm"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+</template>

@@ -1,8 +1,8 @@
 .playingCards .card {
   display: inline-block;
   position: relative;
-  width: 1.5em;
-  height: 2.1em;
+  width: 1.8em;
+  height: 2.4em;
   border: 1px solid #666;
 
   color: #000 !important;
@@ -15,12 +15,10 @@
   font-weight: normal;
   font-family: Arial, sans-serif;
 
-  /*Rounded corners */
-  -moz-box-shadow: .1em .1em .25em #333;
-  -webkit-box-shadow: .1em .1em .25em #333;
-  box-shadow: .1em .1em .25em #333;
+  -moz-box-shadow: .05em .05em .10em #333;
+  -webkit-box-shadow: .05em .05em .10em #333;
+  box-shadow: .05em .05em .10em #333;
 
-  /* Shadow */
   -moz-border-radius: .2em;
   -webkit-border-radius: .2em;
   -khtml-border-radius: .2em;
@@ -31,9 +29,20 @@
   line-height: 2.1em;
 }
 
+.playingCards a:hover {
+  text-decoration: none;
+}
+
+.btn {
+  margin-bottom: 10px;
+}
+
+.story.container {
+  padding-top: 50px;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
-
 html,
 body {
   height: 100%;

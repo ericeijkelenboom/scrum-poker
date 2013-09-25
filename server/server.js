@@ -19,15 +19,16 @@ Meteor.startup(function() {
 
 
 Meteor.methods({
-  create_story: function(player_id){
-      var story_id = Stories.insert({
-          display_id: incrementCounter('story_display_id'),
-          moderator: player_id,
-          done: false
-         });
+  // create_story: function(player_id){
+  //     debugger;
+  //     var story_id = Stories.insert({
+  //         display_id: incrementCounter('story_display_id'),
+  //         moderator: player_id,
+  //         done: false
+  //        });
       
-      return story_id;
-  }, 
+  //     return story_id;
+  // }, 
 });  
 
 //Keep track of connected players 

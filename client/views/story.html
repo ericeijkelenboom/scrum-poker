@@ -1,0 +1,51 @@
+<template name="story">
+    <div class="navbar navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Story {{display_id}} ({{active_players.length}} players)</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="story container">
+        {{#if done}} 
+            <div id="estimates-container">
+                Estimates:
+                <br/>
+                <div class="playingCards simpleCards">
+                    {{#each estimates}} 
+                        {{#if is_valid_estimate }}
+                            {{> card }}
+                        {{else}}
+                            <div>No estimate given</div>
+                        {{/if}} 
+                    {{/each}} 
+                </div>
+                
+                {{#if i_am_moderator}}
+                    <button class="btn btn-default" id="create_new">Create new story</button>
+                {{/if}}
+            </div>
+        {{else}}
+            <div class="playingCards simpleCards" id="cards">
+                {{#each cards}}
+                    {{> card}}
+                {{/each}}
+            </div>
+
+            <div>
+                {{#if can_force_show}}
+                    <button class="btn btn-default" id="force_show">Force show</button>
+                {{/if}} 
+            </div>
+        {{/if}}    
+    </div>
+</template>
+
+<template name="card">
+    <a href="#">
+        <div class="card rank-7">
+            <span class="rank">{{this}}</span>
+        </div>
+</a>
+</template>
