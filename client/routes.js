@@ -22,19 +22,19 @@ StoryController = RouteController.extend({
   	data: function () {
       var _id = this.params._id;
 
-      // Find story
-    	var story = Stories.findOne(_id);
+      // Find story by id or display id
+      var story = isNaN(_id) ? Stories.findOne(_id) : Stories.findOne({display_id: +_id});
       if(!story) 
         return story; // 404
 
-      Session.set('story_id', _id);
+      Session.set('story_id', story._id);
       
       // Make sure we have a player
       var player = Players.findOne(obtain_player_id());
-      var setModifier = {$set: {story_id: _id}};
+      var setModifier = {$set: {story_id: story._id}};
 
       // Reset estimate if player is moving to another story
-      if(player.story_id !== _id) {
+      if(player.story_id !== story._id) {
         setModifier.$set['estimate'] = -1;
       }
 

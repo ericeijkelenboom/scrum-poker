@@ -15,12 +15,6 @@ Template.story.events({
 	}
 });
 
-Template.story.estimates = function() {
-	return _.map(active_players(), function(player) {
-		return player.estimate;
-	});
-}
-
 Template.story.active_players = function() {
 	return active_players();
 }
@@ -30,14 +24,23 @@ Template.story.cards = function(){
 }
 
 Template.story.can_force_show = function() {
-	if(this.done) return false; 
+	return !this.done && is_moderator();
+}
 
-	// Force show enabled for the moderator only
-	return Stories.findOne(current_story_id()).moderator === my_id(); 
+Template.story.is_moderator = function() {
+	return is_moderator();
 }
 
 Template.story.is_valid_estimate = function(estimate) {
 	return estimate != -1;
+}
+
+estimates = function() {
+	return _.map(active_players(), function(player) { return player.estimate; });
+}
+
+is_moderator = function() {
+	return Stories.findOne(current_story_id()).moderator === my_id(); 
 }
 
 active_players = function() {
@@ -63,5 +66,8 @@ try_mark_story_done = function() {
 }
 
 mark_story_done = function() {
-	Stories.update(current_story_id(), {$set: {done: true}});
+	// Store all estimates on story + set to done
+	var sorted_estimates = _.sortBy(estimates(), function(num) { return num; });
+
+	Stories.update(current_story_id(), {$set: {done: true, estimates: sorted_estimates}});
 }

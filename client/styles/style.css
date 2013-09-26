@@ -26,7 +26,7 @@
 }
 
 .playingCards .card .rank {
-  line-height: 2.1em;
+  line-height: 1.8em;
 }
 
 .playingCards a:hover {
@@ -35,10 +35,6 @@
 
 .btn {
   margin-bottom: 10px;
-}
-
-.story.container {
-  padding-top: 50px;
 }
 
 /* Sticky footer styles

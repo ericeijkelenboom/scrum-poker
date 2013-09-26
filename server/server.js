@@ -2,8 +2,10 @@
 var connected_players = {};
 
 Meteor.startup(function() {
-  Meteor.publish('story', function(story_id) {
-    return Stories.find(story_id);
+  Meteor.publish('story', function(id) {
+    // Publish story by id or display id
+    debugger; 
+    return isNaN(id) ? Stories.find(id) : Stories.find({display_id: +id});
   });
 
   Meteor.publish('players_in_story', function(story_id) {
@@ -19,16 +21,16 @@ Meteor.startup(function() {
 
 
 Meteor.methods({
-  // create_story: function(player_id){
-  //     debugger;
-  //     var story_id = Stories.insert({
-  //         display_id: incrementCounter('story_display_id'),
-  //         moderator: player_id,
-  //         done: false
-  //        });
+  create_story: function(player_id){
+      var story_id = Stories.insert({
+          display_id: incrementCounter('story_display_id'),
+          moderator: player_id,
+          players: [player_id],
+          done: false
+         });
       
-  //     return story_id;
-  // }, 
+      return story_id;
+  }, 
 });  
 
 //Keep track of connected players 
