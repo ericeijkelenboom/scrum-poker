@@ -3,49 +3,65 @@
       <div class="container">
         <div class="navbar-header">
             <div class="navbar-brand">
-                Story {{display_id}} {{#if done}} completed {{else}} ({{active_players.length}} players) {{/if}}
+                <strong>Story {{display_id}}</strong> ({{active_players.length}} players)
             </div>
         </div>
       </div>
     </div>
 
-    <div class="story container">
-        {{#if done}} 
-            <div id="estimates-container">
-                <div class="playingCards simpleCards">
-                    {{#each estimates}} 
-                        {{#if is_valid_estimate }}
-                            {{> card }}
-                        {{else}}
-                            <div>No estimate given</div>
-                        {{/if}} 
-                    {{/each}} 
-                </div>
-                
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-xs-12">
+                {{#if done}} 
+                    <div class="highlight-info">This story has been estimated.</div>
+                        <div class="playingCards simpleCards">
+                            {{#each estimates}} 
+                                {{> card }}
+                            {{/each}} 
+                        </div>
+                {{else}}
+                    <div class="highlight-info">Please estimate and wait for your team members.</div>
+                    <div class="playingCards simpleCards" id="cards">
+                        {{#each cards}}
+                            {{> card}}
+                        {{/each}}
+                    </div>
+                {{/if}}        
+            </div>
+            <div class="col-md-4 col-xs-12">
                 {{#if is_moderator}}
-                    <button class="btn btn-default" id="create_new">Create new story</button>
+                    <div class="highlight">        
+                        <div class="row">
+                            <div class="col-xs-12"><div class="moderator-title">You are moderator for this story</div></div>
+                            <div class="col-xs-12">
+                                {{#if can_force_show}}
+                                    <button class="btn btn-default btn" id="force_show">Force show</button>
+                                {{/if}} 
+                            </div>
+                            <div class="col-xs-12">
+                                {{#if done}}
+                                    <button class="btn btn-default" id="create_new">Create new story</button>        
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
                 {{/if}}
             </div>
-        {{else}}
-            <div class="playingCards simpleCards" id="cards">
-                {{#each cards}}
-                    {{> card}}
-                {{/each}}
-            </div>
-
-            <div>
-                {{#if can_force_show}}
-                    <button class="btn btn-default" id="force_show">Force show</button>
-                {{/if}} 
-            </div>
-        {{/if}}    
+        </div>
     </div>
 </template>
 
 <template name="card">
     <a href="#">
-        <div class="card rank-7">
-            <span class="rank">{{this}}</span>
-        </div>
+        {{#if is_card_back this}}
+            <div class="card back">
+                <span class="rank">*</span>
+            </div>
+        {{else}}
+            <div class="card {{#if active_estimate this}} active {{/if}}">
+                <span class="rank">{{this}}</span>
+            </div>
+        {{/if}}
+        
     </a>
 </template>

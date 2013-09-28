@@ -31,8 +31,12 @@ Template.story.is_moderator = function() {
 	return is_moderator();
 }
 
-Template.story.is_valid_estimate = function(estimate) {
-	return estimate != -1;
+Template.card.is_card_back = function(card_value) {
+	return card_value == -1;
+}
+
+Template.card.active_estimate = function(val) {
+	return val == Players.findOne(my_id()).estimate; 
 }
 
 estimates = function() {
@@ -52,7 +56,7 @@ perform_estimate = function(estimate) {
 	if(Stories.findOne(current_story_id()).done)
 		return;
 
-	Players.update(my_id(), {$set: {estimate: +estimate}});
+	Players.update(my_id(), {$set: {estimate: estimate}});
 
 	try_mark_story_done();
 }
@@ -67,7 +71,11 @@ try_mark_story_done = function() {
 
 mark_story_done = function() {
 	// Store all estimates on story + set to done
-	var sorted_estimates = _.sortBy(estimates(), function(num) { return num; });
+	var sorted_estimates = _.sortBy(estimates(), function(estimate) { 
+		if(estimate === '?')
+			return 999;
+		return estimate; 
+	});
 
 	Stories.update(current_story_id(), {$set: {done: true, estimates: sorted_estimates}});
 }
