@@ -26,6 +26,7 @@ Meteor.methods({
           display_id: incrementCounter('story_display_id'),
           moderator: player_id,
           players: [player_id],
+          messages: [],
           done: false
          });
       
