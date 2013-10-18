@@ -13,12 +13,14 @@
         <div class="row">
             <div class="col-md-8 col-xs-12">
                 {{#if done}} 
-                    <div class="highlight-info">This story has been estimated.</div>
-                        <div class="playingCards simpleCards">
-                            {{#each estimates}} 
-                                {{> card }}
-                            {{/each}} 
-                        </div>
+                    <div class="highlight-info">
+                        This story has been estimated.
+                    </div>
+                    <div class="playingCards simpleCards">
+                        {{#each estimates}} 
+                            {{> card }}
+                        {{/each}} 
+                    </div>
                 {{else}}
                     <div class="highlight-info">Please estimate and wait for your team members.</div>
                     <div class="playingCards simpleCards" id="cards">
@@ -62,7 +64,7 @@
             </div>
         {{else}}
             <div class="card {{#if active_estimate this}} active {{/if}}">
-                <span class="rank">{{this}}</span>
+                <span class="rank">{{this.value}}</span>
             </div>
         {{/if}}
         

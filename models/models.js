@@ -3,7 +3,7 @@ Stories = new Meteor.Collection('stories');
 Players = new Meteor.Collection('players');
 
 Decks = {
-	fibonacci: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, '?']
+	fibonacci: [{value: 0}, {value: 1}, {value: 2}, {value: 3}, {value: 5}, {value: 8}, {value: 13}, {value: 21}, {value: 34}, {value: 55}, {value: 89}, {value: '?'}]
 };
 
 log = function(message) {
