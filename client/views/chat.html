@@ -1,0 +1,23 @@
+<template name="storychat">
+     <div class="row">
+        <div class="col-md-8 col-xs-12">
+            <div class="well">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="input-group">
+                          <input id="chat_message" type="text" class="form-control" placeholder="{{placeholder}}">
+                          <span class="input-group-btn">
+                            <button id="chat_message_send" class="btn btn-default" type="button">Go!</button>
+                          </span>
+                        </div>
+                    </div>
+                </div>
+                {{#each messages}}
+                    <div class="row">
+                        <div class="col-xs-12">{{display_name player_name}}: {{message}}</div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</template>
