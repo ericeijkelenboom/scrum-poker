@@ -1,6 +1,8 @@
 planning-poker
 ==============
 
-Online, distributed planning poker. Implemented with Meteor. 
+Scrum planning poker for distributed teams. Implemented with [Meteor](https://www.meteor.com).
 
-All code located in the [develop branch](https://github.com/ericeijkelenboom/planning-poker/tree/develop).
+Website: [http://scrumpoker.meteor.com/] (http://scrumpoker.meteor.com/)
+
+Latest code located in the [develop branch](https://github.com/ericeijkelenboom/planning-poker/tree/develop).
